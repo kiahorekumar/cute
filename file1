@@ -1,0 +1,19 @@
+{
+   ('SCM Checkout'){
+     git 'https://github.com/javahometech/my-app'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'maven3', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
+ stage('Email Notification'){
+      mail bcc: '', body: 'hai', cc: '', from: '', replyTo: '', subject: 'hai', to: 'kishorekumaryadav251@gmail.com'
+   }
+stage('Deploy to Tomcat'){
+      sshagent(['ad2ab1c0-ae45-47b0-aab2-49fb99d6b65b']) {
+      sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@18.191.26.216:/tmp/'
+      sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@18.191.26.216:/opt/tomcat9/apache-tomcat-9.0.10/webapps'
+      }
+   }
+}
